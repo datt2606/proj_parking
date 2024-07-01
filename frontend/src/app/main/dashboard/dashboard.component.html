@@ -1,0 +1,80 @@
+<div class="content-wrapper container-xxl p-0">
+  <div class="content-body">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header flex-column align-items-start">
+            <h4 class="card-title mb-75">Trạng thái các phương tiện</h4>
+          </div>
+          <div class="card-body">
+            <div id="donut-chart" #parkingTotalChartRef>
+              <apx-chart
+                [series]="parkingTotalChart.series"
+                [chart]="parkingTotalChart.chart"
+                [labels]="parkingTotalChart.labels"
+                [plotOptions]="parkingTotalChart.plotOptions"
+                [responsive]="parkingTotalChart.responsive"
+                [colors]="parkingTotalChart.colors"
+                [legend]="parkingTotalChart.legend"
+              ></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header flex-column align-items-start">
+            <h4 class="card-title mb-75">Doanh thu</h4>
+          </div>
+          <div class="card-body">
+            <div
+              id="column-chart"
+              *ngIf="revenueChart?.series"
+              #revenueChartRef
+            >
+              <apx-chart
+                [series]="revenueChart.series"
+                [chart]="revenueChart.chart"
+                [xaxis]="revenueChart.xaxis"
+                [stroke]="revenueChart.stroke"
+                [tooltip]="revenueChart.tooltip"
+                [colors]="revenueChart.colors"
+                [legend]="revenueChart.legend"
+                [dataLabels]="revenueChart.dataLabels"
+                [plotOptions]="revenueChart.plotOptions"
+                [grid]="revenueChart.grid"
+              ></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="card">
+          <div class="card-header flex-column align-items-start">
+            <h4 class="card-title mb-75">Người dùng theo độ tuổi</h4>
+          </div>
+          <div class="card-body">
+            <div
+              id="column-chart"
+              *ngIf="userWithAgeChart?.series"
+              #userWithAgeChartRef
+            >
+              <apx-chart
+                [series]="userWithAgeChart.series"
+                [chart]="userWithAgeChart.chart"
+                [xaxis]="userWithAgeChart.xaxis"
+                [stroke]="userWithAgeChart.stroke"
+                [tooltip]="userWithAgeChart.tooltip"
+                [colors]="userWithAgeChart.colors"
+                [legend]="userWithAgeChart.legend"
+                [dataLabels]="userWithAgeChart.dataLabels"
+                [plotOptions]="userWithAgeChart.plotOptions"
+                [grid]="userWithAgeChart.grid"
+              ></apx-chart>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

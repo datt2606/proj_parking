@@ -1,0 +1,81 @@
+<div class="content-wrapper p-0 container-xxl">
+    <div class="content-body">
+        <section>
+            <div class="card shadow-none border-0 mb-0 rounded-0 pb-1">
+                <div class="card-body pb-0 pl-1">
+                    <div class="row">
+                        <div class="col-12 col-lg-9">
+                            <app-data-table-filter [filters]="filters"
+                                (onChange)="onFilterChange($event)"></app-data-table-filter>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <label class="mb-0">&nbsp;</label>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-primary mr-50" (click)="openForm(null, updateModal)"
+                                    rippleEffect>
+                                    Thêm mới
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="card shadow-none border-0 mb-0 rounded-0">
+                <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+                <ngx-datatable #table [rows]="page.data" class="bootstrap core-bootstrap cursor" [columnMode]="'force'"
+                    [headerHeight]="50" [scrollbarH]="true" [footerHeight]="50" [rowHeight]="50" [externalPaging]="true"
+                    [limit]="page.limit" [count]="page.totalItems" [offset]="page.currentPage"
+                    [loadingIndicator]="isLoading" (page)="setPage($event)">
+                    <ngx-datatable-column name="TT" [width]="50" [canAutoResize]="false" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+                            {{ page.currentPage * page.limit + rowIndex + 1 }}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Địa chỉ" prop="location" [width]="150">
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Sức chứa" prop="capacity" [width]="150">
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column name="Hành động" [width]="100" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-row="row" let-selected="false">
+                            <div class="d-flex align-items-center">
+                                <a container="body" ngbTooltip="Chỉnh sửa" onclick="this.blur()"
+                                    href="javascript:void(0)" (click)="openForm(row, updateModal)"
+                                    class="d-flex align-items-center"><i data-feather="edit" class="mr-75"></i></a>
+                                <a container="body" ngbTooltip="Xóa" onclick="this.blur()" (click)="deleteOne(row)"
+                                    href="javascript:void(0)" class="d-flex align-items-center"><i
+                                        data-feather="trash-2" class="mr-75"></i>
+                                </a>
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-footer>
+                        <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+                            let-curPage="curPage" let-offset="offset">
+                            <div class="page-count" *ngIf="!isLoading">
+                                {{ rowCount }} /
+                                {{ page.totalItems }} hàng
+                            </div>
+                            <datatable-pager [pagerLeftArrowIcon]="'datatable-icon-left'"
+                                [pagerRightArrowIcon]="'datatable-icon-right'"
+                                [pagerPreviousIcon]="'datatable-icon-prev'" [pagerNextIcon]="'datatable-icon-skip'"
+                                [page]="curPage" [size]="pageSize" [count]="rowCount"
+                                [hidden]="!(rowCount / pageSize > 1)" (change)="table.onFooterPage($event)">
+                            </datatable-pager>
+                        </ng-template>
+                    </ngx-datatable-footer>
+                </ngx-datatable>
+            </div>
+        </section>
+    </div>
+</div>
+
+<ng-template #updateModal let-modal>
+    <app-create-update [modal]="modal" [garage]="editGarage" (success)="getDataTable()"></app-create-update>
+</ng-template>

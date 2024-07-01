@@ -1,0 +1,78 @@
+<div class="modal-header">
+    <h5 class="modal-title">
+        {{ vehicle ? "Cập nhật thông tin phương tiện" : "Tạo phương tiện mới" }}
+    </h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus>
+    <form class="form" [formGroup]="form">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Tên phương tiện</label>
+                    <input type="text" class="form-control" placeholder="Tên phương tiện" formControlName="vehicleName"
+                        [ngClass]="
+                    f.vehicleName?.errors?.required && (f.vehicleName.dirty || submitted)
+                      ? 'is-invalid'
+                      : ''
+                  " />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Loại phương tiện</label>
+                    <ng-select [items]="vehicleCategoryItems" bindLabel="name" bindValue="id"
+                        placeholder="Loại phương tiện" formControlName="categoryId"
+                        [ngClass]="submitted && f.categoryId.errors ? 'is-invalid' : ''"></ng-select>
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Biển số</label>
+                    <input type="text" class="form-control" placeholder="Biển số" formControlName="licensePlate"
+                        [ngClass]="
+                    f.licensePlate?.errors?.required && (f.licensePlate.dirty || submitted)
+                      ? 'is-invalid'
+                      : ''
+                  " />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Màu</label>
+                    <input type="text" class="form-control" placeholder="Màu" formControlName="color" [ngClass]="
+                    f.color?.errors?.required && (f.color.dirty || submitted)
+                      ? 'is-invalid'
+                      : ''
+                  " />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label>Hãng</label>
+                    <input type="text" class="form-control" placeholder="Hãng" formControlName="manufacturer" [ngClass]="
+                    f.manufacturer?.errors?.required && (f.manufacturer.dirty || submitted)
+                      ? 'is-invalid'
+                      : ''
+                  " />
+                    <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="submit" rippleEffect class="btn btn-primary" (click)="onSubmit()">
+        Lưu
+    </button>
+    <button rippleEffect class="btn btn-outline-secondary" (click)="modal.close()">
+        Quay lại
+    </button>
+</div>

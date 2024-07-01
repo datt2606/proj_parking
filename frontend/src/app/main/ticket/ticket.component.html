@@ -1,0 +1,231 @@
+<!-- <p>ticket works!</p>
+<app-garage-space-grid [spaceList]="spaceList"></app-garage-space-grid> -->
+<div class="content-wrapper p-0 container-xxl">
+  <div class="content-body">
+    <section>
+      <div class="card shadow-none border-0 mb-0 rounded-0 pb-1">
+        <div class="card-body pb-0 pl-1">
+          <div class="row">
+            <div class="col-12 col-lg-9">
+              <app-data-table-filter
+                [filters]="filters"
+                (onChange)="onFilterChange($event)"
+              ></app-data-table-filter>
+            </div>
+            <div class="col-12 col-lg-3">
+              <label class="mb-0">&nbsp;</label>
+              <div class="d-flex justify-content-end">
+                <button
+                  class="btn btn-primary mr-50"
+                  (click)="openForm(null, updateModal)"
+                  rippleEffect
+                >
+                  Thêm mới
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card shadow-none border-0 mb-0 rounded-0">
+        <mat-progress-bar
+          *ngIf="isLoading"
+          mode="indeterminate"
+        ></mat-progress-bar>
+        <ngx-datatable
+          #table
+          [rows]="page.data"
+          class="bootstrap core-bootstrap cursor"
+          [columnMode]="'force'"
+          [headerHeight]="50"
+          [scrollbarH]="true"
+          [footerHeight]="50"
+          [rowHeight]="50"
+          [externalPaging]="true"
+          [limit]="page.limit"
+          [count]="page.totalItems"
+          [offset]="page.currentPage"
+          [loadingIndicator]="isLoading"
+          (page)="setPage($event)"
+        >
+          <ngx-datatable-column
+            name="TT"
+            [width]="50"
+            [canAutoResize]="false"
+            [sortable]="false"
+          >
+            <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex">
+              {{ page.currentPage * page.limit + rowIndex + 1 }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Khách hàng"
+            prop="customer.fullName"
+            [width]="150"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Biển số"
+            prop="vehicle.licensePlate"
+            [width]="150"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Bãi đỗ"
+            prop="parkingSpace.garage.location"
+            [width]="150"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Vị trí đỗ"
+            prop="parkingSpace.spaceLocation"
+            [width]="80"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Ngày đăng ký"
+            prop="registrationDate"
+            [width]="120"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            name="Ngày hết hạn"
+            prop="expiryDate"
+            [width]="120"
+          >
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Giá vé" prop="price" [width]="100">
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Phương tiện" [width]="150">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div
+                class="badge badge-pil"
+                [ngClass]="
+                  row.isParking ? 'badge-light-success' : 'badge-light-danger'
+                "
+                style="min-width: 110px"
+              >
+                {{ row.isParking ? "Đang trong bãi" : "Đã rời bãi" }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column name="Trạng thái vé" [width]="150">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div
+                class="badge badge-pil"
+                [ngClass]="
+                  row.isActive ? 'badge-light-success' : 'badge-light-danger'
+                "
+                style="min-width: 110px"
+              >
+                {{ row.isActive ? "Hoạt động" : "Bị khóa" }}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            *ngIf="!isCustomer"
+            name="Hành động"
+            [width]="100"
+            [sortable]="false"
+          >
+            <ng-template
+              ngx-datatable-cell-template
+              let-row="row"
+              let-selected="false"
+            >
+              <div class="d-flex align-items-center">
+                <a
+                  *ngIf="!row.isParking"
+                  container="body"
+                  ngbTooltip="Phương tiện vào bãi"
+                  onclick="this.blur()"
+                  (click)="parking(row)"
+                  href="javascript:void(0)"
+                  class="d-flex align-items-center"
+                  ><i data-feather="download" class="mr-75"></i>
+                </a>
+                <a
+                  *ngIf="row.isParking"
+                  container="body"
+                  ngbTooltip="Phương tiện rời bãi"
+                  onclick="this.blur()"
+                  (click)="parking(row)"
+                  href="javascript:void(0)"
+                  class="d-flex align-items-center"
+                  ><i data-feather="upload" class="mr-75"></i>
+                </a>
+                <a
+                  *ngIf="!row.isActive"
+                  container="body"
+                  ngbTooltip="Kích hoạt vé"
+                  onclick="this.blur()"
+                  (click)="active(row)"
+                  href="javascript:void(0)"
+                  class="d-flex align-items-center"
+                  ><i data-feather="unlock" class="mr-75"></i>
+                </a>
+                <a
+                  *ngIf="row.isActive"
+                  container="body"
+                  ngbTooltip="Khóa vé"
+                  onclick="this.blur()"
+                  (click)="active(row)"
+                  href="javascript:void(0)"
+                  class="d-flex align-items-center"
+                  ><i data-feather="lock" class="mr-75"></i>
+                </a>
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-footer>
+            <ng-template
+              ngx-datatable-footer-template
+              let-rowCount="rowCount"
+              let-pageSize="pageSize"
+              let-curPage="curPage"
+              let-offset="offset"
+            >
+              <div class="page-count" *ngIf="!isLoading">
+                {{ rowCount }} / {{ page.totalItems }} hàng
+              </div>
+              <datatable-pager
+                [pagerLeftArrowIcon]="'datatable-icon-left'"
+                [pagerRightArrowIcon]="'datatable-icon-right'"
+                [pagerPreviousIcon]="'datatable-icon-prev'"
+                [pagerNextIcon]="'datatable-icon-skip'"
+                [page]="curPage"
+                [size]="pageSize"
+                [count]="rowCount"
+                [hidden]="!(rowCount / pageSize > 1)"
+                (change)="table.onFooterPage($event)"
+              >
+              </datatable-pager>
+            </ng-template>
+          </ngx-datatable-footer>
+        </ngx-datatable>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #updateModal let-modal>
+  <app-create-update
+    [modal]="modal"
+    [vehicle]="editVehicle"
+    (success)="getDataTable()"
+  ></app-create-update>
+</ng-template>

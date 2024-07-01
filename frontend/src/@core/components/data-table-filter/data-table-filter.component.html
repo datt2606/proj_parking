@@ -1,0 +1,26 @@
+<form class="form" [formGroup]="form">
+  <div class="row">
+    <div *ngFor="let filter of filters" class="col-12 col-md-{{ filter.column + 1 }} col-xxl-{{ filter.column }}">
+      <label class="mb-0">{{ filter.label }}</label>
+      <fieldset class="form-group">
+        <input class="form-control" *ngIf="filter.type == 'Text'" type="search" [formControlName]="filter.controlName"
+          [placeholder]="filter.placeholder" />
+        <ng-select *ngIf="filter.type == 'LimitSelect'" [items]="limitOption" [clearable]="false"
+          [formControlName]="filter.controlName"></ng-select>
+        <ng-select *ngIf="filter.type == 'SingleSelect'" [items]="filter.items" [bindLabel]="filter.bindLabel"
+          [bindValue]="filter.bindValue" [formControlName]="filter.controlName" [placeholder]="filter.placeholder"
+          [clearable]="filter.clearable"></ng-select>
+        <ng-select *ngIf="filter.type == 'MultiSelect'" [multiple]="true" [closeOnSelect]="false" [items]="filter.items"
+          [bindLabel]="filter.bindLabel" [bindValue]="filter.bindValue" [formControlName]="filter.controlName"
+          [placeholder]="filter.placeholder"></ng-select>
+        <ng2-flatpickr *ngIf="filter.type == 'DateRange'" [placeholder]="filter.placeholder"
+          [config]="filter.dateRangeConfig" [setDate]="filter.dateRangeConfig.defaultDate">
+          <div *ngIf="filter.clearable && showClearable(filter)" class="ng2-flatpickr-clear"
+            (click)="dateRangeClear(filter)">
+            <i data-feather="x" class="mr-75"></i>
+          </div>
+        </ng2-flatpickr>
+      </fieldset>
+    </div>
+  </div>
+</form>

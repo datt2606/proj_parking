@@ -1,0 +1,352 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    {{ ticket ? "Cập nhật thông tin vé" : "Tạo vé mới" }}
+  </h5>
+  <button
+    type="button"
+    class="close"
+    (click)="modal.dismiss('Cross click')"
+    aria-label="Close"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus>
+  <section class="horizontal-wizard">
+    <div id="stepper1" class="bs-stepper horizontal-wizard-example">
+      <div class="bs-stepper-header">
+        <div class="step" data-target="#account-details">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">1</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Phương tiện</span>
+            </span>
+          </button>
+        </div>
+        <div class="line">
+          <i data-feather="chevron-right" class="font-medium-2"></i>
+        </div>
+        <div class="step" data-target="#personal-info">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">2</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Bãi đỗ</span>
+            </span>
+          </button>
+        </div>
+        <div class="line">
+          <i data-feather="chevron-right" class="font-medium-2"></i>
+        </div>
+        <div class="step" data-target="#address">
+          <button class="step-trigger">
+            <span class="bs-stepper-box">3</span>
+            <span class="bs-stepper-label">
+              <span class="bs-stepper-title">Thời hạn vé</span>
+            </span>
+          </button>
+        </div>
+      </div>
+      <div class="bs-stepper-content">
+        <div id="account-details" class="content">
+          <div *ngIf="!isCustomer" class="row" [formGroup]="form">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Khách hàng</label>
+                <ng-select
+                  [items]="userItems"
+                  formControlName="customerId"
+                  placeholder="Khách hàng"
+                  [clearable]="false"
+                  bindLabel="fullName"
+                  bindValue="id"
+                  [ngClass]="
+                    submitted && f.customerId.errors ? 'is-invalid' : ''
+                  "
+                ></ng-select>
+                <div class="invalid-feedback">Không được bỏ trống</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <label>Phương tiện</label>
+                <ng-select
+                  [items]="vehicleOptionItems"
+                  [(ngModel)]="vehicleOptionFormControl"
+                  [clearable]="false"
+                  bindLabel="name"
+                ></ng-select>
+              </div>
+            </div>
+          </div>
+          <form
+            *ngIf="vehicleOptionFormControl.value == 1"
+            [formGroup]="form"
+            class="form"
+          >
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Chọn 1 phương tiện</label>
+                  <ng-select
+                    [items]="vehicleItems"
+                    placeholder="Phương tiện"
+                    formControlName="vehicleId"
+                    [clearable]="false"
+                    bindLabel="name"
+                    bindValue="id"
+                  >
+                    <ng-template ng-label-tmp let-item="item">
+                      <div>
+                        {{ item.vehicleName }} - Biển số:
+                        {{ item.licensePlate }}
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index"
+                    >
+                      <div>
+                        {{ item.vehicleName }} - Biển số:
+                        {{ item.licensePlate }}
+                      </div>
+                    </ng-template></ng-select
+                  >
+                </div>
+              </div>
+            </div>
+          </form>
+          <form
+            *ngIf="vehicleOptionFormControl.value == 2"
+            class="form"
+            [formGroup]="newVehicleForm"
+          >
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Tên phương tiện</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Tên phương tiện"
+                    formControlName="vehicleName"
+                    [ngClass]="
+                      nvf.vehicleName?.errors?.required &&
+                      (nvf.vehicleName.dirty || submitted)
+                        ? 'is-invalid'
+                        : ''
+                    "
+                  />
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Loại phương tiện</label>
+                  <ng-select
+                    [items]="vehicleCategoryItems"
+                    bindLabel="name"
+                    bindValue="id"
+                    placeholder="Loại phương tiện"
+                    formControlName="categoryId"
+                    [ngClass]="
+                      submitted && nvf.categoryId.errors ? 'is-invalid' : ''
+                    "
+                  ></ng-select>
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Biển số</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Biển số"
+                    formControlName="licensePlate"
+                    [ngClass]="
+                      nvf.licensePlate?.errors?.required &&
+                      (nvf.licensePlate.dirty || submitted)
+                        ? 'is-invalid'
+                        : ''
+                    "
+                  />
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Màu</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Màu"
+                    formControlName="color"
+                    [ngClass]="
+                      nvf.color?.errors?.required &&
+                      (nvf.color.dirty || submitted)
+                        ? 'is-invalid'
+                        : ''
+                    "
+                  />
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Hãng</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Hãng"
+                    formControlName="manufacturer"
+                    [ngClass]="
+                      nvf.manufacturer?.errors?.required &&
+                      (nvf.manufacturer.dirty || submitted)
+                        ? 'is-invalid'
+                        : ''
+                    "
+                  />
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div id="personal-info" class="content">
+          <form class="form">
+            <div [formGroup]="searchSpaceForm" class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Bãi đỗ</label>
+                  <ng-select
+                    [items]="garageItems"
+                    bindLabel="location"
+                    bindValue="id"
+                    placeholder="Bãi đỗ"
+                    formControlName="garageId"
+                    [ngClass]="
+                      submitted && ssf.garageId.errors ? 'is-invalid' : ''
+                    "
+                  ></ng-select>
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div
+                *ngIf="spacePage && spacePage.data.length > 0"
+                class="col-12 text-center"
+              >
+                <app-garage-space-grid
+                  [spacePage]="spacePage"
+                  (onPageChange)="pageSpaceChange($event)"
+                  (onSpaceChange)="spaceChange($event)"
+                ></app-garage-space-grid>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div id="address" class="content">
+          <form class="form">
+            <div [formGroup]="form" class="row">
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Loại vé</label>
+                  <ng-select
+                    [items]="ticketTypeItems"
+                    bindLabel="name"
+                    bindValue="value"
+                    placeholder="Loại vé"
+                    formControlName="ticketType"
+                    [ngClass]="
+                      submitted && f.ticketType.errors ? 'is-invalid' : ''
+                    "
+                    [clearable]="false"
+                  ></ng-select>
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Số tháng (năm)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Số tháng (năm)"
+                    formControlName="count"
+                    [ngClass]="
+                      f.count?.errors?.required && (f.count.dirty || submitted)
+                        ? 'is-invalid'
+                        : ''
+                    "
+                  />
+                  <div class="invalid-feedback">Không được bỏ trống</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Ngày hết hạn</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Ngày hết hạn"
+                    formControlName="expiryDate"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group">
+                  <label>Số tiền phải thanh toán (VNĐ)</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Số tiền"
+                    formControlName="price"
+                    readonly
+                  />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Loại vé</th>
+                        <th>Giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let type of ticketTypeItems">
+                        <td>{{ type.name }}</td>
+                        <td>{{ type.cost }} VNĐ/{{ type.unit }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<div class="modal-footer">
+  <button
+    type="submit"
+    rippleEffect
+    class="btn btn-primary"
+    (click)="onSubmit()"
+  >
+    Lưu
+  </button>
+  <button
+    rippleEffect
+    class="btn btn-outline-secondary"
+    (click)="modal.close()"
+  >
+    Quay lại
+  </button>
+</div>

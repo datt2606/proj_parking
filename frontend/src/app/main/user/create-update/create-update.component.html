@@ -1,0 +1,139 @@
+<div class="modal-header">
+  <h5 class="modal-title">
+    {{ user ? "Cập nhật thông tin người dùng" : "Tạo người dùng mới" }}
+  </h5>
+  <button
+    type="button"
+    class="close"
+    (click)="modal.dismiss('Cross click')"
+    aria-label="Close"
+  >
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body" tabindex="0" ngbAutofocus>
+  <form class="form" [formGroup]="form">
+    <div class="row">
+      <div *ngIf="!user" class="col-12">
+        <div class="form-group">
+          <label>Username</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Username"
+            formControlName="username"
+            [ngClass]="
+              f.username?.errors?.required && (f.username.dirty || submitted)
+                ? 'is-invalid'
+                : ''
+            "
+          />
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+      <div *ngIf="!user" class="col-12">
+        <label>Mật khẩu</label>
+        <div class="input-group input-group-merge form-password-toggle">
+          <input
+            [type]="passwordTextType ? 'text' : 'password'"
+            formControlName="password"
+            class="form-control form-control-merge"
+            placeholder="············"
+            tabindex="2"
+            [ngClass]="{
+              'is-invalid error': submitted && f.password.errors
+            }"
+          />
+          <div class="input-group-append">
+            <span class="input-group-text cursor-pointer"
+              ><i
+                class="feather font-small-4"
+                [ngClass]="{
+                  'icon-eye-off': passwordTextType,
+                  'icon-eye': !passwordTextType
+                }"
+                (click)="togglePasswordTextType()"
+              ></i
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>Họ và tên</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Họ và tên"
+            formControlName="fullName"
+            [ngClass]="
+              f.fullName?.errors?.required && (f.fullName.dirty || submitted)
+                ? 'is-invalid'
+                : ''
+            "
+          />
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>Giới tính</label>
+          <ng-select
+            [items]="genderItems"
+            bindLabel="name"
+            bindValue="value"
+            placeholder="Giới tính"
+            formControlName="gender"
+            [ngClass]="submitted && f.gender.errors ? 'is-invalid' : ''"
+          ></ng-select>
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>Ngày sinh</label>
+          <ng2-flatpickr
+            [ngClass]="submitted && f.dateOfBirth.errors ? 'is-invalid' : ''"
+            [config]="flatpickrConfig"
+            placeholder="Ngày sinh"
+          ></ng2-flatpickr>
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group">
+          <label>Chức vụ</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Chức vụ"
+            formControlName="position"
+            [ngClass]="
+              f.position?.errors?.required && (f.position.dirty || submitted)
+                ? 'is-invalid'
+                : ''
+            "
+          />
+          <div class="invalid-feedback">Không được bỏ trống</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button
+    type="submit"
+    rippleEffect
+    class="btn btn-primary"
+    (click)="onSubmit()"
+  >
+    Lưu
+  </button>
+  <button
+    rippleEffect
+    class="btn btn-outline-secondary"
+    (click)="modal.close()"
+  >
+    Quay lại
+  </button>
+</div>

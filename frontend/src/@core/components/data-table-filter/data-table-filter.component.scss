@@ -1,0 +1,17 @@
+@import "@core/scss/angular/libs/select.component.scss";
+@import "@core/scss/angular/libs/flatpickr.component.scss";
+
+.ng2-flatpickr-input-container {
+  position: relative;
+}
+
+.ng2-flatpickr-clear {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  :hover {
+    color: #d0021b;
+  }
+}

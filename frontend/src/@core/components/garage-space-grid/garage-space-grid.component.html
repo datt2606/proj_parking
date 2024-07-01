@@ -1,0 +1,46 @@
+<div class="mb-1">
+  <button
+    [disabled]="spacePage.currentPage <= 0"
+    (click)="pageChange(-1)"
+    type="button"
+    class="btn btn-primary m-1"
+    rippleEffect
+  >
+    -</button
+  >{{ spacePage.currentPage + 1 }} / {{ spacePage.totalPages }}
+  <button
+    [disabled]="spacePage.currentPage >= spacePage.totalPages - 1"
+    (click)="pageChange(1)"
+    type="button"
+    class="btn btn-primary m-1"
+    rippleEffect
+  >
+    +
+  </button>
+</div>
+
+<div class="grid-container">
+  <div
+    *ngFor="let space of spacePage.data"
+    class="grid-item"
+    [ngClass]="
+      selected.spaceLocation == space.spaceLocation && selected.id == space.id
+        ? 'bg-success'
+        : space.isOccupied
+        ? 'bg-danger'
+        : 'bg-info'
+    "
+    (click)="spaceChange(space)"
+  >
+    {{ space.spaceLocation }}
+  </div>
+</div>
+
+<div class="d-flex align-items-center">
+  <div class="bg-info colors-block m-1"></div>
+  <div>Còn trống</div>
+  <div class="bg-danger colors-block m-1"></div>
+  <div>Đã có phương tiện đăng ký</div>
+  <div class="bg-success colors-block m-1"></div>
+  <div>Chọn vị trí này</div>
+</div>
